@@ -54,7 +54,7 @@ int commandLine(char* flag, char* number, int qtt) {
 
     for(cont=tamanho-1 ; cont>=0 ; cont-=1) {
         if((number[cont] > 57) || (number[cont] < 48)) {
-            printf("\033[31mfailed: flag argument NaN\033[m");
+            puts("\033[31mfailed: flag argument NaN\033[m");
             exit(0);
         }
 

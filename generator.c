@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+int quickGenerator(void);
+/* Gerador de entrada e saída para o Quick Select */
+
+int ordenTopoGenerator(void);
+/* Gerador de entrada e saída para a ordenação topológica */
+
+/*----------------------------------------------------------------------------*/
+
 int main(void) {
     int cont, cont2, troca,
         *vetor=NULL, tam=0;
