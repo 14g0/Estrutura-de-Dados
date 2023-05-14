@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int quickGenerator(void);
+void quickGenerator(void);
 /* Gerador de entrada e saída para o Quick Select */
 
 int ordenTopoGenerator(void);
@@ -11,6 +11,10 @@ int ordenTopoGenerator(void);
 /*----------------------------------------------------------------------------*/
 
 int main(void) {
+    quickGenerator();
+}
+
+void quickGenerator(void) {
     int cont, cont2, troca,
         *vetor=NULL, tam=0;
 
