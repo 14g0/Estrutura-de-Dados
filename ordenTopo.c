@@ -32,35 +32,35 @@ queue fila;
 /*----------------------------------------------------------------------------*/
 
 
-int callocFile(void);
 /* Cria os vetores de adjacência e inicializa os outros vetores. */
+int callocFile(void);
 
-void newVertice(vertice *array, int valor, int pos);
 /* Cria as adjacências de cada vértice como uma lista encadeada. */
+void newVertice(vertice *array, int valor, int pos);
 
-int removeVertice(vertice *array, int pos);
 /* Remove um nó da lista especificada de adjacências. */
+int removeVertice(vertice *array, int pos);
 
-void addToQueue(queue *fila, int valor);
 /* Adiciona um valor na fila. */
+void addToQueue(queue *fila, int valor);
 
-int removeFromQueue(queue *fila);
 /* Remove o valor da fila. */
+int removeFromQueue(queue *fila);
 
-void ordenacaoTopologica(void);
 /* Cria a ordenação topológica do grafo. */
+void ordenacaoTopologica(void);
 
 
 /* Funções auxiliares que eu usei desenvolvendo o código. */
 void printQueue(queue fila);
 void printLinked(void);
-/**/
 
 /*----------------------------------------------------------------------------*/
 
 int main(int argc, char **argv) {
 
     callocFile();
+    ordenacaoTopologica();
 
     return 1;
 }
@@ -68,10 +68,12 @@ int main(int argc, char **argv) {
 /*----------------------------------------------------------------------------*/
 
 int callocFile(void) {
-    int cont, index=0, pos=0, pot=1, barraN=;
     char carac = 1, numero[30];
+    int cont, absolute = 0,
+        posCarac=0, potencia = 1, barraN = 0;
 
-    scanf("%d", &tam);
+    scanf("%d %d", &tam, &cont);
+    getchar();
 
     if((vetor = calloc(tam, sizeof(int))) == NULL) {
         puts("\033[31mfailed: calloc array\033[m");
@@ -86,11 +88,36 @@ int callocFile(void) {
     if((vertices = calloc(tam, sizeof(vertice))) == NULL) {
         puts("\033[31mfailed: calloc vertex array\033[m");
         exit(0);
-    }
+    }    
 
     while(carac != EOF) {
+        while(((carac = getchar()) != ' ') && (carac != '\n')) {
+            if((48 <= carac) && (carac <= 57)) {
+                numero[posCarac] = carac;
+                posCarac += 1;
+            }
+            else if(carac == EOF) break;
+        }
+        numero[posCarac] = '\0';
 
+        posCarac = 0;
+        while(numero[posCarac] != '\0') posCarac += 1;
+        for(cont=posCarac-1 ; cont>=0 ; cont-=1) {
+            absolute += (numero[cont]-48)*potencia;
+            potencia *= 10;
+        }
+
+        if(absolute) {
+            vetor[absolute-1] += 1;
+            newVertice(vertices, absolute, barraN);
+        }
+
+        if(carac == '\n') barraN += 1;
+        potencia = 1;
+        posCarac = 0;
+        absolute = 0;
     }
+    printLinked();
 
     return 1;
 }
@@ -117,32 +144,18 @@ void newVertice(vertice *array, int valor, int pos) {
 
 int removeVertice(vertice *array, int pos) {
     int removido;
-    vertice *atual; /* *atual, *anterior*/
+    vertice *atual, *prox;
 
     atual = &array[pos];
+    prox = atual->prox;
     removido = atual->valor;
-
-    if(atual->prox == NULL) atual->valor = 0;
-    else *atual = *atual->prox;
-
-    printf("%d\n", removido);
-    printLinked();
-    puts("\n\n");
-    /*
-    if((atual->valor == valor) && (atual != anterior)) {
-        anterior->valor = atual->valor;
-        anterior->prox = atual->prox;
-        return atual->valor;
-    }
+    if(!atual->prox) atual->valor = 0;
     else {
-        puts("else");
-        atual = atual->prox;
-        anterior->valor = atual->valor;
-        anterior->prox = atual->prox;
-        return atual->valor;
+        *atual = *prox;
+        free(prox);
     }
-    */
-   return removido;
+
+    return removido;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -190,35 +203,30 @@ int removeFromQueue(queue *fila) {
 /*----------------------------------------------------------------------------*/
 
 void ordenacaoTopologica(void) {
-    int cont, sup, vert, controle=0;
-    queue *pfila = &fila;
-
-    fila.tam = 0;
-    fila.queue = NULL;
+    int cont, qRem, vRem, ordemPos=0;
+    vertice *head;
 
     for(cont=0 ; cont<tam ; cont+=1) {
-        if(vetor[cont] == 0) {
-            addToQueue(pfila, cont+1);
-        }
+        if(vetor[cont] == 0) addToQueue(&fila, cont+1);
     }
 
-    removeVertice(vertices, 4);
-
-    /*
-
-    while(pfila->queue != NULL) {
-        sup = removeFromQueue(pfila);
-        printf("%d\n", controle+1);
-        while((vertices[sup-1].prox != NULL) && (vertices[sup-1].valor != 0)) {
-            removeVertice(vertices, sup-1);
+    while(fila.queue != NULL) {
+        qRem = removeFromQueue(&fila);
+        head = &vertices[qRem-1];
+        while(head->prox || head->valor) {
+            vRem = removeVertice(vertices, qRem-1);
+            vetor[vRem-1] -= 1;
+            if(vetor[vRem-1] == 0) addToQueue(&fila, vRem);
         }
+        ordem[ordemPos] = qRem;
+        ordemPos += 1;
     }
-    */
-    printLinked();
+
+    for(cont=0 ; cont<tam ; cont+=1) printf("%d ", ordem[cont]);
 }
 
 /*----------------------------------------------------------------------------*/
-
+/*
 void printQueue(queue fila) {
     int cont;
 
@@ -234,11 +242,12 @@ void printLinked(void) {
 
     for(cont=0 ; cont<tam ; cont+=1) {
         printv = vertices[cont];
-        printf("[%d, %p]->", printv.valor, printv.prox);
+        printf("[%d, %x]->", printv.valor, printv.prox);
         while(printv.prox != NULL) {
             printv = *printv.prox;
-            printf("[%d, %p]->", printv.valor, printv.prox);
+            printf("[%d, %x]->", printv.valor, printv.prox);
         }
         puts("");
     }
 }
+*/
