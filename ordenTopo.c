@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Entrada utilizada de teste, professor que forneceu.
-8
+/*
+
+Entrada utilizada de teste, professor que forneceu.
+8 10
 2
 7
 2 4
@@ -11,6 +13,14 @@
 7
 
 3 4
+---------------------------------------------
+5 7
+2 3 5
+3
+4
+
+2 4
+
 */
 
 /*----------------------------------------------------------------------------*/
@@ -58,9 +68,31 @@ void printLinked(void);
 /*----------------------------------------------------------------------------*/
 
 int main(int argc, char **argv) {
+    vertice *percorre, *troca, *primeiro;
 
     callocFile();
-    ordenacaoTopologica();
+    printLinked();
+    percorre = &vertices[0];
+
+    /*Percorre se encontra no A*/
+    while(percorre) {
+        puts("1");
+        if(percorre->valor /*A*/ > percorre->prox->valor/*B*/) {
+            puts("if");
+            primeiro = percorre;
+            troca = percorre->prox->prox; /*Guardamos o endereço do C*/
+            percorre = percorre->prox; /*Percorre agora é o B*/
+            percorre->prox = primeiro;
+            primeiro->prox = troca;
+            percorre = primeiro;
+        }
+        else {
+            puts("else");
+            percorre = percorre->prox;
+        }
+    }
+    puts("-----------------------------");
+    printLinked();
 
     return 1;
 }
@@ -117,7 +149,6 @@ int callocFile(void) {
         posCarac = 0;
         absolute = 0;
     }
-    printLinked();
 
     return 1;
 }
@@ -221,12 +252,13 @@ void ordenacaoTopologica(void) {
         ordem[ordemPos] = qRem;
         ordemPos += 1;
     }
+    
 
     for(cont=0 ; cont<tam ; cont+=1) printf("%d ", ordem[cont]);
 }
 
 /*----------------------------------------------------------------------------*/
-/*
+
 void printQueue(queue fila) {
     int cont;
 
@@ -250,4 +282,3 @@ void printLinked(void) {
         puts("");
     }
 }
-*/
