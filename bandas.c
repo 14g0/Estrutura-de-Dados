@@ -17,10 +17,11 @@ void insertionSort(nodo **cabeca, nodo *novoNodo);
 void printLinked(nodo *cabeca);
 
 /*
-    Eu pensei melhor por 1min e não faz o menor sentido fazer um bubble sort
-    na lista encadeada, então criei a função pra colocar ordenadamente.
-    Eu tentei fazer de jeitos normais, pedi até pro gepeto, mas é tudo sinistro
-    então acho melhor ficar só com o insertionSort mesmo.
+    Eu pensei melhor por 1min e não faz muito sentido realizar
+    um Bubble Sort na lista encadeada, é muito mais simples
+    inserir ordenadamente.
+    Dito isso, se alguém não conseguir fazer de nenhum, eu crio um
+    Bubble Sort depois.
 
     void bubbleLinked(nodo *cabeca);
 */
@@ -54,21 +55,30 @@ nodo *newNodo(int valor) {
 /*----------------------------------------------------------------------------*/
 
 void insertionSort(nodo **cabeca, nodo *novoNodo) {
-    nodo **auxiliar = cabeca, *anterior;
-    
-    if(!*auxiliar) {
-        puts("Primeiro");
-        *auxiliar = novoNodo;
+    nodo *atual;
+
+    /*Se o novo nodo for menor que a cabeça, ele vira a cabeça*/
+    if(!(*cabeca) || (*cabeca)->valor >= novoNodo->valor) {
+        novoNodo->prox = *cabeca;
+        *cabeca = novoNodo;
     }
     else {
-        while((novoNodo->valor >= (*auxiliar)->valor) && (*auxiliar)->prox) {
-            (*auxiliar) = (*auxiliar)->prox;
+        /* Começa a percorrer a cabeça */
+        atual = *cabeca;
+        
+        /*
+            Percorre até o próximo ser nulo ou o valor do pŕoximo
+            ser menor que o valor do novo nodo.
+        */
+        while(atual->prox && (atual->prox->valor < novoNodo->valor)) {
+            atual = atual->prox;
         }
-        if(!(*auxiliar)->prox) (*auxiliar)->prox = novoNodo;
-        else if(auxiliar == cabeca) {
-            *auxiliar = novoNodo;
-            novoNodo->prox = *auxiliar;
-        }
+        /*
+            -Se o atual for o último, vc simplesmente adiciona no final
+            -Se não, já tem o anterior ao novo nodo.
+        */
+        novoNodo->prox = atual->prox;
+        atual->prox = novoNodo;
     }
 }
 
@@ -91,27 +101,7 @@ void printLinked(nodo *cabeca) {
 
 /*
 void bubbleLinked(nodo *cabeca) {
-    nodo *anterior = NULL, *atual;
-    int trocado = 0;
-
-    do {    
-        atual = cabeca;
-        trocado = 1;
-        while(atual->prox != anterior) {
-            if(atual->valor > atual->prox->valor) {
-                if(atual->valor > atual->prox->valor) {
-                    if(anterior) anterior->prox = atual->prox;
-                    else cabeca = atual->prox;
-                }
-
-                atual->prox = atual->prox->prox;
-                atual->prox->prox = atual;
-                trocado = 1;
-            }
-        }
-        anterior = atual;
-        atual = atual->prox;
-    }while(trocado);
+    nodo *anterior, *atual;
 }
 */
 }
