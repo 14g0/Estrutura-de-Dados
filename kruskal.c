@@ -7,12 +7,12 @@ typedef struct Aresta {
 } Aresta;
 
 Aresta *arestas;
-int tamanho = 0;
-int *subconjuntos, *pesos;
+int qtdVert, qtdArestas;
+int *subconjuntos, *tamanhos;
 
 /*----------------------------------------------------------------------------*/
 
-/* Lê as entradas das arestas e seus respectivos pesos. */
+/* Lê as entradas das arestas e seus respectivos tamanhos. */
 void mallocGrafo(void);
 
 /* Ordena o vetor de arestas pelo seu peso, tendo o último sempre como pivot. */
@@ -31,7 +31,7 @@ int main(void) {
 
     mallocGrafo();
 
-    for(cont=0 ; cont<tamanho ; cont+=1) {
+    for(cont=0 ; cont<qtdArestas ; cont+=1) {
         if(Find(arestas[cont].v1) != Find(arestas[cont].v2)) {
             Union(arestas[cont].v1, arestas[cont].v2);
             resultado += arestas[cont].peso;
@@ -46,11 +46,11 @@ int main(void) {
 /*----------------------------------------------------------------------------*/
 
 void mallocGrafo(void) {
-    int cont, qtdVert;
+    int cont;
 
-    scanf("%d %d", &qtdVert, &tamanho);
+    scanf("%d %d", &qtdVert, &qtdArestas);
 
-    if((arestas = malloc(tamanho*sizeof(Aresta))) == NULL) {
+    if((arestas = malloc(qtdArestas*sizeof(Aresta))) == NULL) {
         puts("\033[mfailed: malloc Arestas L37\033[m");
     }
 
@@ -58,7 +58,7 @@ void mallocGrafo(void) {
         puts("\033[mfailed: calloc Arestas L52\033[m");
     }
 
-    if((pesos = calloc((qtdVert+1), sizeof(int))) == NULL) {
+    if((tamanhos = calloc((qtdVert+1), sizeof(int))) == NULL) {
         puts("\033[mfailed: calloc Arestas L52\033[m");
     }
 
@@ -66,16 +66,11 @@ void mallocGrafo(void) {
         subconjuntos[cont] = cont;
     }
 
-    for(cont=0 ; cont<tamanho ; cont+=1) {
+    for(cont=0 ; cont<qtdArestas ; cont+=1) {
         scanf("%d %d %d", &arestas[cont].v1, &arestas[cont].v2, &arestas[cont].peso);
     }
 
-    quickSort(1, tamanho);
-
-    
-    for(cont=0 ; cont<tamanho ; cont+=1) {
-        printf("V%02d= v1: %02d | v2: %02d | peso: %02d\n", (cont+1), arestas[cont].v1, arestas[cont].v2, arestas[cont].peso);
-    }
+    quickSort(1, qtdArestas);
 
 }
 
@@ -108,11 +103,20 @@ void quickSort(int inicio, int fim) {
 /*----------------------------------------------------------------------------*/
 
 void Union(int raiz1, int raiz2) {
-    if(pesos[Find(raiz1)] > pesos[Find(raiz2)]) subconjuntos[raiz2] = raiz1;
-    else if(pesos[Find(raiz2)] > pesos[Find(raiz1)]) subconjuntos[raiz1] = raiz2;
+    int r1 = Find(raiz1),
+        r2 = Find(raiz2);
+
+    if(tamanhos[r1] > tamanhos[r2]) {
+        subconjuntos[raiz2] = raiz1;
+        tamanhos[r1] += 1;
+    }
+    else if(tamanhos[r2] > tamanhos[r1]) {
+        subconjuntos[raiz1] = raiz2;
+        tamanhos[r2] += 1;
+    }
     else {
         subconjuntos[raiz2] = raiz1;
-        pesos[raiz1] += 1;
+        tamanhos[raiz1] += 1;
     }
 }
 
