@@ -1,30 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
-
-Entrada utilizada de teste, professor que forneceu.
-8 10
-2
-7
-2 4
-6
-1 3
-7
-
-3 4
----------------------------------------------
-5 7
-2 3 5
-3
-4
-
-2 4
-
-*/
-
-/*----------------------------------------------------------------------------*/
-
 typedef struct vertice {
     int valor;
     struct vertice *prox;
