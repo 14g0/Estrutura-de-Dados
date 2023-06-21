@@ -107,11 +107,11 @@ void Union(int raiz1, int raiz2) {
         r2 = Find(raiz2);
 
     if(tamanhos[r1] > tamanhos[r2]) {
-        subconjuntos[raiz2] = raiz1;
+        subconjuntos[r2] = r1;
         tamanhos[r1] += 1;
     }
     else if(tamanhos[r2] > tamanhos[r1]) {
-        subconjuntos[raiz1] = raiz2;
+        subconjuntos[r1] = r2;
         tamanhos[r2] += 1;
     }
     else {
