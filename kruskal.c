@@ -8,39 +8,53 @@ typedef struct Aresta {
 
 Aresta *arestas;
 int tamanho = 0;
-
-
+int* subconjuntos, pesos;
 
 /*----------------------------------------------------------------------------*/
 
-/* Lê as entradas das arestas e seus respectivos pesos */
-void getArestas(void);
+/* Lê as entradas das arestas e seus respectivos pesos. */
+void mallocGrafo(void);
 
-/* Ordena o vetor de arestas pelo seu peso */
+/* Ordena o vetor de arestas pelo seu peso, tendo o último sempre como pivot. */
 void quickSort(int inicio, int fim);
 
-/**/
-void UnionFind(void);
+/* Une os subconjuntos de vértices do grafo. */
+void Union(int raiz1, int raiz2);
 
+/* Procura o vértice raiz de um subconjunto. */
+int Find(int valor);
 
 /*----------------------------------------------------------------------------*/
 
 int main(void) {
 
-    getArestas();
+    mallocGrafo();
+
 
     return 0;
 }
 
 /*----------------------------------------------------------------------------*/
 
-void getArestas(void) {
-    int cont;
+void mallocGrafo(void) {
+    int cont, qtdVert;
 
-    scanf("%*d %d", &tamanho);
+    scanf("%d %d", &qtdVert, &tamanho);
 
     if((arestas = malloc(tamanho*sizeof(Aresta))) == NULL) {
-        printf("\033[mfailed: malloc Arestas L37");
+        printf("\033[mfailed: malloc Arestas L37\033[m");
+    }
+
+    if((subconjuntos = malloc((qtdVert+1)*sizeof(int))) == NULL) {
+        printf("\033[mfailed: calloc Arestas L52\033[m");
+    }
+
+    if((pesos = calloc(qtdVert, sizeof(int))) == NULL) {
+        printf("\033[mfailed: calloc Arestas L52\033[m");
+    }
+
+    for(cont=0 ; cont<qtdVert ; cont+=1) {
+        subconjuntos[cont] = cont;
     }
 
     for(cont=0 ; cont<tamanho ; cont+=1) {
@@ -78,4 +92,21 @@ void quickSort(int inicio, int fim) {
         quickSort(atual+1, fim);
     }
 
+}
+
+/*----------------------------------------------------------------------------*/
+
+void Union(int raiz1, int raiz2) {
+
+}
+
+/*----------------------------------------------------------------------------*/
+
+int Find(int chave) {
+    int procurado = chave;
+    while(subconjuntos[procurado] != procurado) {
+        procurado = subconjuntos[procurado];
+    }
+    printf("%d\n", procurado);
+    return procurado;
 }
