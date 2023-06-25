@@ -59,7 +59,7 @@ void mallocGrafo(void) {
     }
 
     if((tamanhos = calloc((qtdVert+1), sizeof(int))) == NULL) {
-        puts("\033[mfailed: calloc Arestas L52\033[m");
+        puts("\033[mfailed: calloc Tamanho dos vértices L62\033[m");
     }
 
     for(cont=0 ; cont<qtdVert+1 ; cont+=1) {
@@ -115,8 +115,8 @@ void Union(int raiz1, int raiz2) {
         tamanhos[r2] += 1;
     }
     else {
-        subconjuntos[raiz2] = raiz1;
-        tamanhos[raiz1] += 1;
+        subconjuntos[r2] = r1;
+        tamanhos[r1] += 1;
     }
 }
 
