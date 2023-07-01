@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 typedef struct no {
@@ -15,26 +16,28 @@ typedef struct numBin {
 
 /*----------------------------------------------------------------------------*/
 
-/* Recebe os inputs das CIDRs e os aloca    */
+/* Recebe os inputs das CIDRs e faz o tratamento das strings */
 void lerInput(void);
 
 /*
-    Converte o número em base decimal passado como argumento para binário, e o
-    concatena na string também passada como argumento.
+    Converte o número em base decimal passado como argumento para
+    binário, e o concatena na string também passada como argumento.
 */
 void ipToBin(int numDec, char *string);
 
-/* Converte o número pe*/
-int toInt(char *numero);
+/*  */
+void makeDigitalT(void);
 
 /*----------------------------------------------------------------------------*/
 
 int main(void) {
-    char *numero = NULL;
+    char *numero = calloc(sizeof(char), 1);
+    int cont;
 
     ipToBin(94, numero);
+    ipToBin(2, numero);
 
-
+    puts(numero);
 
     return 0;
 }
@@ -42,49 +45,38 @@ int main(void) {
 /*----------------------------------------------------------------------------*/
 
 void lerInput(void) {
-    
+    int cont, qtd;
+
+    scanf("%d", &qtd);
 }
 
 /*----------------------------------------------------------------------------*/
 
 void ipToBin(int numDec, char *string) {
-    int cont, tamanho=0,
+    int cont, tamStr=0, tamBin=0,
         resto, ddendo = numDec;
+
+    char *numBin = calloc(1, 1), troca,
+        *concat = malloc(0);
     
-    char carac;
-
-    if(string == NULL) puts("abacate");
-    printf("%d\n", tamanho);
-    puts("--------------");
-
-    for(cont=0 ; ddendo>=1 ; cont+=1) {
+    puts(string);
+    for(cont=0 ; ddendo>0 ; cont+=1) {
         resto = ddendo % 2;
         ddendo /= 2;
-        tamanho += 1;
-        printf("%d\n", resto);
 
-        string = realloc(string, sizeof(char)*tamanho);
-        carac = 48+resto;
-        string[cont] = carac;
+        numBin = realloc(numBin, sizeof(char)*(cont+1));
+        numBin[cont] = 48+resto;
     }
-    string[cont] = '\0';
+    numBin = realloc(numBin, sizeof(char)*(cont+1));
+    numBin[cont] = '\0';
+    tamBin = cont-1;
 
-    puts("-----------------------");
-    printf("%s\n", string);
+    for(cont=0 ; cont<(tamBin+1)/2 ; cont+=1) {
+        troca = numBin[cont];
+        numBin[cont] = numBin[tamBin-cont];
+        numBin[tamBin-cont] = troca;
+    }
+
+    strcat(string, numBin);
 }
-
 /*----------------------------------------------------------------------------*/
-
-int toInt(char *numero) {
-    int cont, numInt=0, tamanho, pot=1;
-
-    for(cont=0 ; numero[cont]!='\0' ; cont+=1);
-    tamanho = cont-1;
-
-    for(cont=tamanho ; cont>=0 ; cont-=1) {
-        numInt += (numero[cont]-48)*pot;
-        pot *= 10;
-    }
-
-    return numInt;
-}
