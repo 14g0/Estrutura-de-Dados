@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 
 typedef struct no {
@@ -35,9 +34,10 @@ int main(void) {
     int cont;
 
     ipToBin(94, numero);
-    ipToBin(2, numero);
-
     puts(numero);
+    ipToBin(2, numero);
+    puts(numero);
+
 
     return 0;
 }
@@ -56,10 +56,8 @@ void ipToBin(int numDec, char *string) {
     int cont, tamStr=0, tamBin=0,
         resto, ddendo = numDec;
 
-    char *numBin = calloc(1, 1), troca,
-        *concat = malloc(0);
+    char *numBin = calloc(1, sizeof(char)), troca;
     
-    puts(string);
     for(cont=0 ; ddendo>0 ; cont+=1) {
         resto = ddendo % 2;
         ddendo /= 2;
@@ -69,14 +67,17 @@ void ipToBin(int numDec, char *string) {
     }
     numBin = realloc(numBin, sizeof(char)*(cont+1));
     numBin[cont] = '\0';
-    tamBin = cont-1;
+    tamBin = cont;
 
     for(cont=0 ; cont<(tamBin+1)/2 ; cont+=1) {
         troca = numBin[cont];
-        numBin[cont] = numBin[tamBin-cont];
-        numBin[tamBin-cont] = troca;
+        numBin[cont] = numBin[tamBin-1-cont];
+        numBin[tamBin-1-cont] = troca;
     }
 
-    strcat(string, numBin);
+    while(string[tamStr] != '\0') tamStr += 1;
+    for(cont=0 ; cont<tamBin+1 ; cont+=1) string[tamStr+cont] = numBin[cont];
+
+    free(numBin);
 }
 /*----------------------------------------------------------------------------*/
