@@ -7,15 +7,11 @@ typedef struct no {
     char *info;
 } no;
 
-/*
-typedef struct numBin {
-    char 
-} numBin;
-*/
+no *cabeca;
 
 /*----------------------------------------------------------------------------*/
 
-/* Recebe os inputs das CIDRs e faz o tratamento das strings */
+/* Recebe os inputs das CIDRs e faz o tratamento das strings. */
 void lerInput(void);
 
 /*
@@ -24,20 +20,21 @@ void lerInput(void);
 */
 void ipToBin(int numDec, char *string);
 
-/*  */
-void makeDigitalT(void);
+/* Organiza  */
+void makeDigitalTree(int subMask, char *string);
 
 /*----------------------------------------------------------------------------*/
 
 int main(void) {
-    char *numero = calloc(sizeof(char), 1);
-    int cont;
+    int cont, n1, n2, n3, n4, subMask, qtd, qtdPointer;
+    char *numero = calloc(sizeof(char), 33),
+         *info = calloc(31, sizeof(char));
 
-    ipToBin(94, numero);
-    puts(numero);
-    ipToBin(2, numero);
-    puts(numero);
+    scanf("%d", &qtd);
 
+    for(cont=0 ; cont<qtd ; cont+=1) {
+        scanf("%d.%d.%d.%d/%d ", &n1, &n2, &n3, &n4, &subMask);
+    }
 
     return 0;
 }
@@ -56,28 +53,29 @@ void ipToBin(int numDec, char *string) {
     int cont, tamStr=0, tamBin=0,
         resto, ddendo = numDec;
 
-    char *numBin = calloc(1, sizeof(char)), troca;
-    
+    char *numBin = calloc(9, sizeof(char)), troca;
+    for(cont=0 ; cont<8 ; cont+=1) numBin[cont] = '0';
+
+    /* Adiciona os números na string */
     for(cont=0 ; ddendo>0 ; cont+=1) {
         resto = ddendo % 2;
         ddendo /= 2;
 
-        numBin = realloc(numBin, sizeof(char)*(cont+1));
         numBin[cont] = 48+resto;
     }
-    numBin = realloc(numBin, sizeof(char)*(cont+1));
-    numBin[cont] = '\0';
-    tamBin = cont;
 
-    for(cont=0 ; cont<(tamBin+1)/2 ; cont+=1) {
+    /* Inverte a string */
+    for(cont=0 ; cont<4 ; cont+=1) {
         troca = numBin[cont];
-        numBin[cont] = numBin[tamBin-1-cont];
-        numBin[tamBin-1-cont] = troca;
+        numBin[cont] = numBin[7-cont];
+        numBin[7-cont] = troca;
     }
 
     while(string[tamStr] != '\0') tamStr += 1;
-    for(cont=0 ; cont<tamBin+1 ; cont+=1) string[tamStr+cont] = numBin[cont];
+    
+    for(cont=0 ; cont<9 ; cont+=1) string[tamStr+cont] = numBin[cont];
 
     free(numBin);
 }
+
 /*----------------------------------------------------------------------------*/
