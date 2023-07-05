@@ -39,6 +39,7 @@ int main(void) {
     lerInput();
     puts("----------------------------------");
     printOutput();
+    puts("terminou");
 
     return 0;
 }
@@ -47,12 +48,13 @@ int main(void) {
 
 void lerInput(void) {
     int cont, n1, n2, n3, n4, subMasc, qtd;
-    char *binario = calloc(sizeof(char), 33),
-         *info = calloc(sizeof(char), 61);
+    char *binario, *info = calloc(sizeof(char), 61);
 
     scanf("%d", &qtd);
 
     for(cont=0 ; cont<qtd ; cont+=1) {
+        binario = calloc(sizeof(char), 33);
+
         scanf("%d.%d.%d.%d/%d ", &n1, &n2, &n3, &n4, &subMasc);
         fgets(info, 61, stdin);
 
@@ -61,6 +63,8 @@ void lerInput(void) {
         ipToBin(n3, binario);
         ipToBin(n4, binario);
         makeDigitalTree(subMasc, binario, info);
+
+        free(binario);
     }
 }
 
@@ -129,11 +133,11 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
             }
         }
 
-        if(cont == subMasc-1) {
+        if(cont == subMasc-1 || ((subMasc == 0) && (cont == 0))) {
             for(cont2=0 ; info[cont2] != '\0' ; cont2+=1);
 
-            if((ultimo->info = malloc(sizeof(char)*(cont2+1))) == NULL) {
-                puts("\033[1;31mfailed: malloc L136\033[m");
+            if((ultimo->info = calloc(61, sizeof(char))) == NULL) {
+                puts("\033[1;31mfailed: calloc L136\033[m");
                 exit(-1);
             }
             else {
@@ -142,6 +146,8 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
                 }
                 info[cont2] = '\0';
             }
+            
+            puts(ultimo->info);
         }
     }
 }
@@ -150,32 +156,38 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
 
 void printOutput(void) {
     int cont, n1, n2, n3, n4;
-    char *binario = calloc(sizeof(char), 33), *info;
+    char *binario, *info;
     no *ultimo = cabeca;
 
-    while(scanf("%d.%d.%d.%d\n", &n1, &n2, &n3, &n4)) {
+    while(scanf("%d.%d.%d.%d", &n1, &n2, &n3, &n4) != EOF) {
+        binario = calloc(sizeof(char), 33);
+        ultimo = cabeca;
+
         ipToBin(n1, binario);
         ipToBin(n2, binario);
         ipToBin(n3, binario);
         ipToBin(n4, binario);
 
-        for(cont=0 ; ultimo ; cont+=1) {
+        puts(binario);
+        for(cont=0 ; cont<32 ; cont+=1) {
             if(binario[cont] == '0') {
-                ultimo = ultimo->zero;
+                if(ultimo->zero) ultimo = ultimo->zero;
+                else break;
 
-                info = ultimo->info;
-                puts("0");
+                if(ultimo->info) info = ultimo->info;
+                printf("0");
             }
             else if(binario[cont] == '1') {
-                ultimo = ultimo->um;
+                if(ultimo->um) ultimo = ultimo->um;
+                else break;
 
-                info = ultimo->info;
-                puts("1");
+                if(ultimo->info) info = ultimo->info;
+                printf("1");
             }
         }
 
-        printf("%s", info);
-    }
+        printf("%d.%d.%d.%d %s\n", n1, n2, n3, n4, info);
 
-    free(binario);
+        free(binario);
+    }
 }
