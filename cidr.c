@@ -37,9 +37,7 @@ int main(void) {
     cabeca = calloc(1, sizeof(no));
 
     lerInput();
-    puts("----------------------------------");
     printOutput();
-    puts("terminou");
 
     return 0;
 }
@@ -146,8 +144,6 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
                 }
                 info[cont2] = '\0';
             }
-            
-            puts(ultimo->info);
         }
     }
 }
@@ -168,21 +164,18 @@ void printOutput(void) {
         ipToBin(n3, binario);
         ipToBin(n4, binario);
 
-        puts(binario);
         for(cont=0 ; cont<32 ; cont+=1) {
             if(binario[cont] == '0') {
                 if(ultimo->zero) ultimo = ultimo->zero;
                 else break;
 
                 if(ultimo->info) info = ultimo->info;
-                printf("0");
             }
             else if(binario[cont] == '1') {
                 if(ultimo->um) ultimo = ultimo->um;
                 else break;
 
                 if(ultimo->info) info = ultimo->info;
-                printf("1");
             }
         }
 
