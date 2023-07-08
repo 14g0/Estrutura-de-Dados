@@ -46,7 +46,12 @@ int main(void) {
 
 void lerInput(void) {
     int cont, n1, n2, n3, n4, subMasc, qtd;
-    char *binario, *info = calloc(sizeof(char), 61);
+    char *binario, *info;
+
+    if((info = calloc(sizeof(char), 61)) == NULL) {
+        puts("\033[1;31mfailed: calloc L52\033[m");
+        exit(-1);
+    }
 
     scanf("%d", &qtd);
 
@@ -64,6 +69,7 @@ void lerInput(void) {
 
         free(binario);
     }
+    free(info);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -108,7 +114,7 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
             if(ultimo->zero) ultimo = ultimo->zero;
             else {
                 if((novo = calloc(1, sizeof(no))) == NULL) {
-                    puts("\033[1;31mfailed: calloc L110\033[m");
+                    puts("\033[1;31mfailed: calloc L117\033[m");
                     exit(-1);
                 }
                 else {
@@ -121,7 +127,7 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
             if(ultimo->um) ultimo = ultimo->um;
             else {
                 if((novo = calloc(1, sizeof(no))) == NULL) {
-                    puts("\033[1;31mfailed: calloc L123\033[m");
+                    puts("\033[1;31mfailed: calloc L130\033[m");
                     exit(-1);
                 }
                 else {
@@ -135,7 +141,7 @@ void makeDigitalTree(int subMasc, char *numBin, char *info) {
             for(cont2=0 ; info[cont2] != '\0' ; cont2+=1);
 
             if((ultimo->info = calloc(61, sizeof(char))) == NULL) {
-                puts("\033[1;31mfailed: calloc L136\033[m");
+                puts("\033[1;31mfailed: calloc L144\033[m");
                 exit(-1);
             }
             else {
